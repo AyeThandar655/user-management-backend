@@ -5,9 +5,9 @@ const router = express.Router();
 
 router.delete('/delete/:id', async (req, res) => {
     const userId = req.params.id;
-
     try {
-        const result = await pool.query('SELECT delete_user($1)', [userId]);
+        //const result = await pool.query('SELECT delete_user($1)', [userId]);
+        const result = await pool.query('SELECT delete_user_by_id($1)', [userId]);
         if (result.rowCount === 1) {
             res.status(200).json({ status: true, message: 'User deleted successfully' });
         } else {
