@@ -4,12 +4,16 @@ const router = express.Router();
 
 router.get('/getdepartment', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM get_departments()');
-    const department = result.rows;
-    res.status(200).json({ status: 'success', department_data: department });
+    const result = await pool.query('SELECT get_department_data() AS department_data');
+    const departmentData = result.rows[0].department_data;
+    if (departmentData) {
+      res.status(200).json({ success: 'success', department_data: departmentData });
+    }
+    else {
+      res.status(401).json({ success: false, message: 'Department data not found.' });
+    }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error.' });
   }
 });
 
