@@ -3,10 +3,12 @@ const express = require('express');
 const pool = require('./db');
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
+
     const verifyResult = await pool.query('SELECT verify_user($1) AS user_data', [email]);
     const verifyUserData = verifyResult.rows[0].user_data;
     const passwordMatch = await bcrypt.compare(password, verifyUserData.password);

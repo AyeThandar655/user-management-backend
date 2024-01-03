@@ -2,36 +2,40 @@
 const express = require('express');
 const pool = require('./db');
 const router = express.Router();
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 router.post('/edit-user', async (req, res) => {
     const {
         user_id,
         first_name,
         last_name,
-        surn_name,
         birth_day,
         birth_month,
         birth_year,
         phone_number,
         role_id,
         department_id,
-        position_id,
+        password
     } = req.body;
     try {
+        const hashedPassword = "";
+        if(password !== ''){
+            hashedPassword = await bcrypt.hash(password, saltRounds);
+        }
         const result = await pool.query(
-            'SELECT edit_user($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
+            'SELECT edit_user($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
             [
                 user_id,
                 first_name,
                 last_name,
-                surn_name,
                 birth_day,
                 birth_month,
                 birth_year,
                 phone_number,
                 role_id,
                 department_id,
-                position_id,
+                hashedPassword
             ]
         );
         if (result.rowCount === 1) {
